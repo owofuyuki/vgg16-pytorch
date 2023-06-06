@@ -213,6 +213,7 @@ class Shard1(nn.Module):
         print(f"Using device: {torch.cuda.get_device_name(self.device)}")
         self.model = shard1_model
         self.convs1 = self.model.convs.to(self.device)
+        self.fcs1 = self.model.fcs.to(self.device)
 
     def forward(self, x_rref):
         x = x_rref.to_here().to(self.device)
@@ -236,6 +237,7 @@ class Shard2(nn.Module):
         print(f"Using device: {torch.cuda.get_device_name(self.device)}")
         self.model = shard2_model
         self.convs2 = self.model.convs.to(self.device)
+        self.fcs2 = self.model.fcs.to(self.device)
 
     def forward(self, x_rref):
         x = x_rref.to_here().to(self.device)
@@ -259,13 +261,14 @@ class Shard3(nn.Module):
         print(f"Using device: {torch.cuda.get_device_name(self.device)}")
         self.model = shard3_model
         self.convs3 = self.model.convs.to(self.device)
+        self.fcs3 = self.model.fcs.to(self.device)
 
     def forward(self, x_rref):
         x = x_rref.to_here().to(self.device)
         with self._lock:
             out = self.convs3(x)
             out = out.reshape(out.size(0), -1)
-            out = self.fcs(out)
+            out = self.fcs3(out)
         return out.cpu()
 
     def parameter_rrefs(self):
