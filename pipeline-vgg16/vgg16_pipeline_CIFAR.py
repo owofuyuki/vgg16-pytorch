@@ -220,6 +220,7 @@ class Shard1(nn.Module):
         with self._lock:
             out = self.convs1(x)
             out = out.reshape(out.size(0), -1)
+            # out = self.fcs1(out)
         return out.cpu()
 
     def parameter_rrefs(self):
@@ -244,6 +245,7 @@ class Shard2(nn.Module):
         with self._lock:
             out = self.convs2(x)
             out = out.reshape(out.size(0), -1)
+            # out = self.fcs2(out)
         return out.cpu()
 
     def parameter_rrefs(self):
