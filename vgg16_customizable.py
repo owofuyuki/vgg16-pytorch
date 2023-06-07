@@ -272,9 +272,10 @@ def test(model, test_loader):
         100. * correct / len(test_loader.dataset)
     ))
 
-for epoch in range(1, num_epochs + 1):
-    time_start = time.time()
-    train(model, train_loader, epoch)
-    time_stop = time.time()
-    test(model, test_loader)
-    print(f"Epoch {epoch} training time: {time_stop - time_start} seconds\n")
+if __name__=="__main__":
+    for epoch in range(1, num_epochs + 1):
+        time_start = time.time()
+        train(model, train_loader, epoch)
+        time_stop = time.time()
+        test(model, test_loader)
+        print(f"Epoch {epoch} training time: {time_stop - time_start} seconds\n")
