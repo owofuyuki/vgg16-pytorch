@@ -202,9 +202,9 @@ Note that the in_width and in_height parameters must be a multiple of 32.
 '''
 
 # Adjust slide position
-shard1_model = VGG(architecture=vgg_types["SPL_VGG16_1_2"])
-shard2_model = VGG(architecture=vgg_types["SPL_VGG16_2_4"])
-shard3_model = VGG(architecture=vgg_types["SPL_VGG16_4_5"])
+shard1_model = VGG(architecture=vgg_splits["SPL_VGG16_1_2"])
+shard2_model = VGG(architecture=vgg_splits["SPL_VGG16_2_4"])
+shard3_model = VGG(architecture=vgg_splits["SPL_VGG16_4_5"])
 
 class Shard1(nn.Module):
     def __init__(self, *args, **kwargs):
