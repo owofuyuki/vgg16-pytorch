@@ -35,8 +35,6 @@ learning_rate = 1e-4
 momentum = 0.9
 log_interval = 10
 
-nblocks = [6,12,24,16]
-growth_rate = 12
 nwt = 20
 timeout = 1000000
 
