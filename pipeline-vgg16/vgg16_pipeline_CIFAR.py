@@ -218,7 +218,7 @@ class Shard1(nn.Module):
         x = x_rref.to_here().to(self.device)
         with self._lock:
             out = self.convs1(x)
-            out = out.reshape(out.size(0), -1)
+            # out = out.reshape(out.size(0), -1)
             # out = self.fcs1(out)
         return out.cpu()
 
@@ -243,7 +243,7 @@ class Shard2(nn.Module):
         x = x_rref.to_here().to(self.device)
         with self._lock:
             out = self.convs2(x)
-            out = out.reshape(out.size(0), -1)
+            # out = out.reshape(out.size(0), -1)
             # out = self.fcs2(out)
         return out.cpu()
 
