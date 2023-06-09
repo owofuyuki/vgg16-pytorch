@@ -21,6 +21,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Training on {device} using PyTorch {torch.__version__}")
 
 # Setting the hyper-parameters
+num_hidden = 4096
 num_classes = 10
 num_epochs = 5
 batch_size = 128
@@ -43,15 +44,11 @@ class VGG(nn.Module):
         in_channels=3,
         in_height=224,
         in_width=224,
-        num_hidden=4096,
-        num_classes=1000
     ):
         super(VGG, self).__init__()
         self.in_channels = in_channels
         self.in_height = in_height
         self.in_width = in_width
-        self.num_hidden = num_hidden
-        self.num_classes = num_classes
         self.convs = self.init_convs(architecture)
         self.fcs = self.init_fcs(architecture)
 
@@ -81,14 +78,14 @@ class VGG(nn.Module):
         return nn.Sequential(
             nn.Linear(
                 last_out_channels * out_height * out_width,
-                self.num_hidden
+                num_hidden
             ),
             nn.ReLU(),
             nn.Dropout(p=0.5),
-            nn.Linear(self.num_hidden, self.num_hidden),
+            nn.Linear(num_hidden, num_hidden),
             nn.ReLU(),
             nn.Dropout(p=0.5),
-            nn.Linear(self.num_hidden, self.num_classes)
+            nn.Linear(num_hidden, num_classes)
         )
 
     # Implementation method for APPENDING layers in a VGG-N network (the convolutional portion)
@@ -133,8 +130,6 @@ VGG16 = VGG(
     in_channels=3,
     in_height=224,
     in_width=224,
-    num_hidden=4096,
-    num_classes=100,
 )
 
 # Print the deep structure of convolutions, batch norms, and max pool layers of VGG16
