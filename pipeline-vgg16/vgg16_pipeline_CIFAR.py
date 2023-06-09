@@ -28,6 +28,7 @@ from torch.distributed.rpc import RRef
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # Setting the hyper-parameters
+num_hidden = 4096
 num_classes = 10
 num_epochs = 5
 batch_size = 128
@@ -116,14 +117,11 @@ class VGG(nn.Module):
         in_channels=3,
         in_height=224,
         in_width=224,
-        num_hidden=4096,
     ):
         super(VGG, self).__init__()
         self.in_channels = in_channels
         self.in_height = in_height
         self.in_width = in_width
-        self.num_hidden = num_hidden
-        self.num_classes = num_classes
         self.convs = self.init_convs(architecture)
         self.fcs = self.init_fcs(architecture)
 
@@ -153,14 +151,14 @@ class VGG(nn.Module):
         return nn.Sequential(
             nn.Linear(
                 last_out_channels * out_height * out_width,
-                self.num_hidden
+                num_hidden
             ),
             nn.ReLU(),
             nn.Dropout(p=0.5),
-            nn.Linear(self.num_hidden, self.num_hidden),
+            nn.Linear(num_hidden, num_hidden),
             nn.ReLU(),
             nn.Dropout(p=0.5),
-            nn.Linear(self.num_hidden, self.num_classes)
+            nn.Linear(num_hidden, num_classes)
         )
 
     # Implementation method for APPENDING layers in a VGG-N network (the convolutional portion)
@@ -201,8 +199,8 @@ Note that the in_width and in_height parameters must be a multiple of 32.
 
 # Adjust slide position
 shard1_model = VGG(architecture=vgg_splits["SPL_VGG16_0_2"])
-shard2_model = VGG(architecture=vgg_splits["SPL_VGG16_2_4"])
-shard3_model = VGG(architecture=vgg_splits["SPL_VGG16_4_5"])
+shard2_model = VGG(architecture=vgg_splits["SPL_VGG16_2_3"])
+shard3_model = VGG(architecture=vgg_splits["SPL_VGG16_3_5"])
 
 class Shard1(nn.Module):
     def __init__(self, *args, **kwargs):
