@@ -22,7 +22,7 @@ interface='eno2'
 if [ $mode == 'CIFAR' ]
 then
 	mkdir -p ./CIFAR_log/split_$split_size
-	sudo tegrastats --interval 1000 --logfile ./CIFAR_log/split_$split_size/$user\_usage.log &
+	# sudo tegrastats --interval 1000 --logfile ./CIFAR_log/split_$split_size/$user\_usage.log &
 	python3 log_bandwidth.py ./CIFAR_log/split_$split_size/$user\_throughput.log &
     # sudo python3 packet_sniffer.py --filename=$user\_$split_size ----ip1=192.168.101.31 --ip2=192.168.101.21 --ip3=192.168.101.24 &
 	python3 vgg16_pipeline_CIFAR.py --rank=$rank --master_addr=$master_addr --master_port=23456 --world_size=3 --interface=$interface --split_size=$split_size
