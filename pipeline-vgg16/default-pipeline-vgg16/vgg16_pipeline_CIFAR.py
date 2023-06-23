@@ -32,8 +32,8 @@ num_hidden = 4096
 num_classes = 10
 num_epochs = 5
 batch_size = 128
-learning_rate = 1e-4
-momentum = 0.9
+learning_rate = 0.01
+momentum = 0.6
 log_interval = 10
 
 nwt = 20
@@ -279,23 +279,35 @@ class DistNet(nn.Module):
 # Run RPC Processes
 def run_master(split_size):
     # define transforms
+    # transform_train = transforms.Compose([
+    #     transforms.Resize((224, 224)),
+    #     transforms.RandomHorizontalFlip(p=0.7),
+    #     transforms.ToTensor(),
+    #     transforms.Normalize(
+    #         mean=[0.485, 0.456, 0.406],
+    #         std=[0.229, 0.224, 0.225],
+    #     ),
+    # ])
+
+    # transform_test = transforms.Compose([
+    #     transforms.Resize((224, 224)),
+    #     transforms.ToTensor(),
+    #     transforms.Normalize(
+    #         mean=[0.485, 0.456, 0.406],
+    #         std=[0.229, 0.224, 0.225],
+    #     ),
+    # ])
     transform_train = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.RandomHorizontalFlip(p=0.7),
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        transforms.Normalize(
-            mean=[0.485, 0.456, 0.406],
-            std=[0.229, 0.224, 0.225],
-        ),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
     ])
 
     transform_test = transforms.Compose([
-        transforms.Resize((224, 224)),
+        transforms.RandomCrop(32, padding=4),
         transforms.ToTensor(),
-        transforms.Normalize(
-            mean=[0.485, 0.456, 0.406],
-            std=[0.229, 0.224, 0.225],
-        ),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
     ])
 
     # load training dataset and validation dataset
@@ -317,8 +329,8 @@ def run_master(split_size):
     test_loader = DataLoader(
         test_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
 
-    classes = ('plane', 'car', 'bird', 'cat', 'deer',
-               'dog', 'frog', 'horse', 'ship', 'truck')
+    # classes = ('plane', 'car', 'bird', 'cat', 'deer',
+    #            'dog', 'frog', 'horse', 'ship', 'truck')
 
     # put the two model parts on worker1 and worker2 respectively
     model = DistNet(split_size, ["worker0", "worker1", "worker2"])
